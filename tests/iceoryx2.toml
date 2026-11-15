@@ -1,0 +1,5 @@
+# 测试专用 iceoryx2 配置：测试进程以 tests 编译目录为工作目录运行，iceoryx2 读取 config/iceoryx2.toml，
+# 使测试资源与本机其他 iceoryx2 程序隔离。
+[global]
+root-path = "/tmp/snow/hybrid_comm_test/iox2/"
+prefix = "hct_"

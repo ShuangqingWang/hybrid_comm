@@ -1,0 +1,25 @@
+# hybrid_comm 的 CMake 包配置
+# 用法：
+#   find_package(hybrid_comm REQUIRED)   # -DCMAKE_PREFIX_PATH=/opt/snow/hybrid/hybrid_comm
+#   target_link_libraries(<目标> PRIVATE hybrid_comm::hybrid_comm)
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Protobuf)
+find_dependency(Threads)
+
+# 随包安装的 iceoryx2 库
+set(_hybrid_comm_lib_dir "${PACKAGE_PREFIX_DIR}/lib")
+foreach(_lib iceoryx2_ffi_c iceoryx2_cxx)
+    if(NOT TARGET hybrid_comm::${_lib})
+        add_library(hybrid_comm::${_lib} SHARED IMPORTED)
+        set_target_properties(hybrid_comm::${_lib} PROPERTIES
+            IMPORTED_LOCATION "${_hybrid_comm_lib_dir}/lib${_lib}.so"
+            IMPORTED_NO_SONAME TRUE)
+    endif()
+endforeach()
+unset(_lib)
+unset(_hybrid_comm_lib_dir)
+
+include("${CMAKE_CURRENT_LIST_DIR}/hybrid_commTargets.cmake")
+check_required_components(hybrid_comm)
